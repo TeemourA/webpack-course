@@ -1,0 +1,25 @@
+{
+  "name": "webpack-course",
+  "version": "1.0.0",
+  "description": "webpack course",
+  "main": "index.js",
+  "scripts": {
+    "dev": "webpack --mode development",
+    "build": "webpack --mode production",
+    "watch": "webpack --mode development --watch"
+  },
+  "keywords": [
+    "webpack"
+  ],
+  "author": "T <t@somemail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "clean-webpack-plugin": "^3.0.0",
+    "css-loader": "^5.0.1",
+    "file-loader": "^6.2.0",
+    "html-webpack-plugin": "^4.5.0",
+    "style-loader": "^2.0.0",
+    "webpack": "^5.10.3",
+    "webpack-cli": "^4.2.0"
+  }
+}
