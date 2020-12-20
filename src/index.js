@@ -7,7 +7,7 @@ import xml from './assets/xml.xml';
 
 const post = new Post('Webpack Post Title', jsImg);
 
-$('pre').html(post.toString());
+$('pre').addClass('code').html(post.toString());
 
 console.log(post.toString());
 

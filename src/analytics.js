@@ -1,14 +1,16 @@
+import * as $ from 'jquery';
+
 const createAnalytics = () => {
   let counter = 0;
   let isCleared = false;
 
   const handler = () => (counter += 1);
 
-  document.addEventListener('click', handler);
+  $(document).on('click', handler);
 
   return {
     clear() {
-      document.removeEventListener('click', handler);
+      $(document).off('click', handler);
       isCleared = true;
     },
     getClicks() {
