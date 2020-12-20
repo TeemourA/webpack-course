@@ -2,13 +2,36 @@ const path = require('path');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const MiniCssExtactPlugin = require('mini-css-extract-plugin');
+const TerserWebpackPlugin = require('terser-webpack-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+
+const isDev = process.env.NODE_ENV === 'development';
+const isProd = !isDev;
+
+const getFilename = ext => (isDev ? `[name].${ext}` : `[name].[hash].${ext}`);
+
+const optimization = () => {
+  const config = {
+    splitChunks: {
+      chunks: 'all',
+    },
+  };
+
+  if (isProd) {
+    config.minimize = true;
+    config.minimizer = [new CssMinimizerPlugin(), new TerserWebpackPlugin()];
+  }
+
+  return config;
+};
 
 module.exports = {
   context: path.resolve(__dirname, 'src'),
   mode: 'development',
   entry: { main: './index.js', analytics: './analytics.js' },
   output: {
-    filename: '[name].[contenthash].js',
+    filename: getFilename('js'),
     path: path.resolve(__dirname, 'dist'),
   },
   resolve: {
@@ -18,11 +41,7 @@ module.exports = {
       '@': path.resolve(__dirname, 'src'),
     },
   },
-  optimization: {
-    splitChunks: {
-      chunks: 'all',
-    },
-  },
+  optimization: optimization(),
   devServer: {
     open: true,
     port: 3000,
@@ -30,6 +49,9 @@ module.exports = {
   plugins: [
     new HTMLWebpackPlugin({
       template: './index.html',
+      minify: {
+        collapseWhitespace: isProd,
+      },
     }),
     new CleanWebpackPlugin(),
     new CopyWebpackPlugin({
@@ -40,12 +62,32 @@ module.exports = {
         },
       ],
     }),
+    new MiniCssExtactPlugin({
+      filename: getFilename('css'),
+    }),
   ],
   module: {
     rules: [
       {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader'],
+        use: [
+          {
+            loader: MiniCssExtactPlugin.loader,
+            options: { publicPath: path.resolve(__dirname, 'dist') },
+          },
+          'css-loader',
+        ],
+      },
+      {
+        test: /\.less$/,
+        use: [
+          {
+            loader: MiniCssExtactPlugin.loader,
+            options: { publicPath: path.resolve(__dirname, 'dist') },
+          },
+          'css-loader',
+          'less-loader',
+        ],
       },
       {
         test: /\.(png|jpg|svg|gif)$/,
