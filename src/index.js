@@ -5,6 +5,7 @@ import jsImg from './assets/pic.png';
 import './styles/styles.css';
 import xml from './assets/xml.xml';
 import './styles/styles.less';
+import './styles/styles.scss';
 
 const post = new Post('Webpack Post Title', jsImg);
 

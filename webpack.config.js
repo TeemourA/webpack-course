@@ -26,6 +26,22 @@ const optimization = () => {
   return config;
 };
 
+const cssLoaders = extraLoader => {
+  const defaultConfig = [
+    {
+      loader: MiniCssExtactPlugin.loader,
+      options: { publicPath: path.resolve(__dirname, 'dist') },
+    },
+    'css-loader',
+  ];
+
+  const finalConfig = extraLoader
+    ? defaultConfig.concat(extraLoader)
+    : defaultConfig;
+
+  return finalConfig;
+};
+
 module.exports = {
   context: path.resolve(__dirname, 'src'),
   mode: 'development',
@@ -70,24 +86,15 @@ module.exports = {
     rules: [
       {
         test: /\.css$/,
-        use: [
-          {
-            loader: MiniCssExtactPlugin.loader,
-            options: { publicPath: path.resolve(__dirname, 'dist') },
-          },
-          'css-loader',
-        ],
+        use: cssLoaders(),
       },
       {
         test: /\.less$/,
-        use: [
-          {
-            loader: MiniCssExtactPlugin.loader,
-            options: { publicPath: path.resolve(__dirname, 'dist') },
-          },
-          'css-loader',
-          'less-loader',
-        ],
+        use: cssLoaders('less-loader'),
+      },
+      {
+        test: /\.s[ac]ss$/,
+        use: cssLoaders('sass-loader'),
       },
       {
         test: /\.(png|jpg|svg|gif)$/,
