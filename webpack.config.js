@@ -9,7 +9,7 @@ const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const isDev = process.env.NODE_ENV === 'development';
 const isProd = !isDev;
 
-const getFilename = ext => (isDev ? `[name].${ext}` : `[name].[hash].${ext}`);
+const getFilename = ext => (isDev ? `[name].${ext}` : `[name].[fullhash].${ext}`);
 
 const optimization = () => {
   const config = {
@@ -84,6 +84,16 @@ module.exports = {
   ],
   module: {
     rules: [
+      {
+        test: /\.m?js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env'],
+          },
+        },
+      },
       {
         test: /\.css$/,
         use: cssLoaders(),

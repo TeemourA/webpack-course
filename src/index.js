@@ -12,6 +12,7 @@ const post = new Post('Webpack Post Title', jsImg);
 $('pre').addClass('code').html(post.toString());
 
 console.log(post.toString());
+console.log(jsImg);
 
 // console.log('json:', json);
 // console.log(xml);
